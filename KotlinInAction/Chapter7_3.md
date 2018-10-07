@@ -30,3 +30,8 @@ operator fun Point.get(index: Int): Int {
 
 
 ### 3-4. for 루프를 위한 iterator 관례
+```
+operator fun CharSequence.iterator(): CharIterator
+
+>>> for (c in "abc") {}
+```
