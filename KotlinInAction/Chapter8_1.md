@@ -40,9 +40,52 @@ ruyFun(10, {x, -> x * x})
 결과 : "x1 : 10, funResult : 100"
 ```
 
+- 예제3
+```
+fun String.filters(predicate: (Char) -> Boolean): String {
+    val sb = StringBuilder()
+
+    for (index in 0 until length) {
+        val element = get(index)
+        if (predicate(element)) sb.append(element)
+    }
+
+    return sb.toString()
+}
+
+>>> println("ab23fl2k".filters { it in 'a'..'z' })
+결과 : abflk
+```
+- String 의 확장함수로 만든 filters()
 
 ### 1.3 자바에서 코틀린 함수 타입 사용
+- 컴파일된 코드 안에서 함수 타입은 일반 인터페이스로 바뀐다.
 
 ### 1.4 디폴트 값을 지정한 함수 타입 파라미터나 널이 될 수 있는 함수 타입 파라미터
+- 파라미터를 함수 타입으로 선언할 때도 **디폴트 값**을 정하는 것이 가능!!
+```
+fun <T> Collection<T>.jointToString (separator: String = ",", prefix: String = "", postfix: String = "",
+                                      transform: (T) -> String = {it.toString()}
+                                      ): String {
+    val result = StringBuilder(prefix)
+    
+    for ((index, element) in this.withIndex()) {
+        if (index > 0) result.append(separator)
+        result.append(transform(element))
+    }
+    
+    result.append(postfix)
+    return result.toString()
+}
 
-... 어렵다..
+>>> val letters = listOf("Alpha", "Beta")
+>>> println(letters.joinToString())
+결과 : Alpha, Beta
+
+>>> println(letters.joinToString(it.toLowerCase()))
+결과 : alpha, beta
+```
+- [withIndex()](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterator/index.html) 함수 참조
+
+### 1.5 함수를 함수에서 반환
+- 보통은 함수가 함수를 반환할 필요가 있는 경우보다, 함수가 함수를 인자로 받아야 할 필요가 있는 경우가 더 많음.
