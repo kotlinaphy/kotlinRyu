@@ -89,3 +89,38 @@ fun <T> Collection<T>.jointToString (separator: String = ",", prefix: String = "
 
 ### 1.5 함수를 함수에서 반환
 - 보통은 함수가 함수를 반환할 필요가 있는 경우보다, 함수가 함수를 인자로 받아야 할 필요가 있는 경우가 더 많음.
+```
+data class Person(val firstName: String, val lastName: String, val phoneNumber: String?)
+
+class ContactListFilters {
+  var prefix: String = ""
+  var onlyWithPhoneNumber: Boolean = false
+  
+  fun getPredicate(): (Person) -> Boolean {
+    val startsWithPrefix = { p: Person ->
+      p.firstName.startsWith(prefix) || p.lastName.startsWith(prefix)
+    }
+    
+    if (!onlyWithPhoneNumber) {
+      return startsWithPrefix
+    }
+    
+    return { startsWithPrefix(it) && it.phoneNumber != null}
+  }
+}
+
+>>> val contacts = listOf(Person("Dmitry", "Jemerov", "123-4567")
+                      , Person("jihoon", "ryu", "000-234123")
+                      , Person("James", "Dib", "999-000123"))
+>>> val contactListFilters = ContactListFilters()
+>>> with (contactListFilters) {
+      prefix = "ryu"
+      onlyWithPhoneNumber = true
+    }
+>>> println(contacts.filter(contactListFilters.getPredicate()))
+결과 : [Person(firstName=jihoon, lastName=ryu, phoneNumber=000-234123)]
+
+```
+
+### 1.6 람다를 홀용한 중복 제거
+- `함수 타입`과 `람다 식`은 재활용하기 좋은 코드를 만들 때 쓸 수 있는 훌룡한 도구!!
