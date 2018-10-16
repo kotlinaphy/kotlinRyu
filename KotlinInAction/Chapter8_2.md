@@ -59,9 +59,27 @@ val people = listOf(Person("Jihoon", 32), Person("DongHwa", 28))
 ### 2.4 함수를 인라인으로 선언해야 하는 경우
 - `inline`키워드로 인해서 성능이 향상되길 원한다면 람다를 인자로 받는 함수에만 사용해야 한다.
 
+### 2.5 자원 관리를 위해 인라인된 람다 사용
+    자원 : 파일, 락, 데이터베이스 트랜잭션 등 여러 다른 대상을 가리킴.
+- 람다로 중복을 없앨 수 있는일반적인 패턴 중 한 가지는 어떤 작업을 하기 전에 자원을 획득하고 작업을 마친 후 자원을 해제하는 자원 관리!
+> 일반적으로 try/finally문 방법 : try블록을 시작하기 직전에 자원 획득, finally 블록에서 자원 해제
 
+- 코틀린에서 제공하는 withLock 함수는 Lock 인터페이스의 확장 함수.
+```
+val l: Lock = ...
+l.withLock { /.../ }
 
-
+코틀린 라이브러리의 withLock 함수 정의
+fun<T> Lock.withLock(action: () -> T): T {
+    lock()
+    
+    try {
+        return action()
+    } finally {
+        unlock()
+    }
+}
+```
 
 
 
