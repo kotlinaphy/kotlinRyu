@@ -21,3 +21,5 @@ people.filter(fun (person): Boolean {
 ```
 people.filter(fun (person) = person.age > 30)
 ```
+
+[8장 고차 함수 책 내용 요약페이지 링크(블로그)](http://devuryu.tistory.com/264)
